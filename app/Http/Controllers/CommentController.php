@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Post;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -32,9 +33,14 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        Post::findOrFail($id);
+        if (! $request->content){
+            return 'Rellena el contenido de tu comentario';
+        }
+        Comment::create(['content' => $request->content, 'post_id' => $id]);
+        return 'El comentario "'.$request->content.'" fue creado exitosamente';        
     }
 
     /**
@@ -43,8 +49,9 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Comment $comment)
     {
+        //
     }
 
     /**
@@ -65,9 +72,16 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, $p_id, $c_id)
     {
-        //
+        Post::findOrFail($p_id);
+        if(is_null($request->input('content'))){
+            return 'No se insertaron datos';
+        }
+        $comment = Comment::findOrFail($c_id);        
+        $comment->content = $request->input('content');
+        $comment->save();
+        return 'Comentario actualizado de manera exitosa';
     }
 
     /**

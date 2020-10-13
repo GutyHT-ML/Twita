@@ -86,9 +86,34 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        if(is_null($request->input('body'))&&is_null($request->input('title'))){
+            $nom = $post->title;
+            $post->save();
+            return 'No hay valores a actualizar para el post "'.$nom.'"';
+        }
+
+        if(is_null($request->input('title'))){
+            $nom = $post->title;
+            $post->body = $request->input('body');
+            $post->save();
+            return 'Se actualizó de manera exitosa el contenido del post "'.$nom.'"';
+        }
+        else if(is_null($request->input('body'))){
+            $nom = $post->title;
+            $post->title = $request->input('title');
+            $post->save();
+            return 'El titulo del post '.$nom.' actualizado de manera exitosa a '.$post->title;
+        }
+        else{
+            $nom = $post->title;
+            $post->title = $request->input('title');
+            $post->body = $request->input('body');
+            $post->save();
+            return 'Los datos del post "'.$nom.'" se han actualizado de manera exitosa';
+        }
     }
 
     /**

@@ -17,10 +17,15 @@ Route::get('post', 'PostController@index');
 Route::get('post/{id}', 'PostController@show')->where('id', '[0-9]+');
 Route::get('post/{id}/comment', 'PostController@showComments')->where('id', '[0-9]+');
 Route::get('post/{p_id}/comment/{c_id}', 'PostController@showComment')->where(['ip_d' => '[0-9]+', 'c_id' => '[0-9]+']);
+
 Route::delete('post/{id}', 'PostController@destroy')->where('id', '[0-9]+');
 Route::delete('post/{p_id}/comment/{c_id}', 'PostController@destroyComment')->where(['ip_d' => '[0-9]+', 'c_id' => '[0-9]+']);
+
 Route::post('post', 'PostController@store');
+Route::post('post/{id}/comment', 'CommentController@store')->where('id', '[0-9]+');
+
 Route::put('post/{id}', 'PostController@update')->where('id', '[0-9]+');
+Route::put('post/{p_id}/comment/{c_id}', 'CommentController@update')->where(['ip_d' => '[0-9]+', 'c_id' => '[0-9]+']);
 
 Route::get('comments', 'CommentController@index');
 /*

@@ -12,19 +12,9 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showPosts()
     {
         return Post::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -33,7 +23,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function createPost(Request $request)
     {
         //reglas de validación
         $reglas = [
@@ -55,28 +45,15 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showPost($id)
     {
         return Post::findOrFail($id);
     }
-    public function showComment($p_id, $c_id)
-    {
-        return Post::findOrFail($p_id)->comments->where('id', $c_id);
-    }
     public function showComments($id)
     {
-        return Post::findOrFail($id)->comments;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
+        $post = Post::findOrFail($id);
+        $comments = $post->comments;
+        return response()->json(['Post' => $post], 200);
     }
 
     /**
@@ -92,27 +69,31 @@ class PostController extends Controller
         if(is_null($request->input('body'))&&is_null($request->input('title'))){
             $nom = $post->title;
             $post->save();
-            return 'No hay valores a actualizar para el post "'.$nom.'"';
+            $str ='No hay valores a actualizar para el post "'.$nom.'"';
+            return response()->json($str, 200);
         }
 
         if(is_null($request->input('title'))){
             $nom = $post->title;
             $post->body = $request->input('body');
             $post->save();
-            return 'Se actualizó de manera exitosa el contenido del post "'.$nom.'"';
+            $str = 'Se actualizó de manera exitosa el contenido del post "'.$nom.'"';
+            return response()->json($str, 200);
         }
         else if(is_null($request->input('body'))){
             $nom = $post->title;
             $post->title = $request->input('title');
             $post->save();
-            return 'El titulo del post '.$nom.' actualizado de manera exitosa a '.$post->title;
+            $str = 'El titulo del post '.$nom.' actualizado de manera exitosa a '.$post->title;
+            return response()->json($str, 200);
         }
         else{
             $nom = $post->title;
             $post->title = $request->input('title');
             $post->body = $request->input('body');
             $post->save();
-            return 'Los datos del post "'.$nom.'" se han actualizado de manera exitosa';
+            $str = 'Los datos del post "'.$nom.'" se han actualizado de manera exitosa';
+            return response()->json($str, 200);
         }
     }
 
@@ -122,16 +103,12 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
         $post = Post::findOrFail($id);
         $nom = $post->title;
         $post->delete();
-        return 'El post "'.$nom.'" fue eliminado satisfactoriamente';
-    }
-    public function destroyComment($p_id, $c_id)
-    {
-        Post::findOrFail($p_id)->comments()->where('id', $c_id)->delete();
-        return 'El comentario fue eliminado satisfactoriamente';
+        $str = 'El post "'.$nom.'" fue eliminado satisfactoriamente';
+        return response()->json($str, 200);
     }
 }

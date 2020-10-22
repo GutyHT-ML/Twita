@@ -8,63 +8,19 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+    public function showComments(){
         return Comment::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, $id)
-    {
-        Post::findOrFail($id);
-        if (! $request->content){
-            return 'Rellena el contenido de tu comentario';
+    public function showComment($p_id, $c_id){
+        $comment = Comment::findOrFail($c_id);
+        $post = Post::findOrFail($p_id);
+        if($comment->post_id != $post->id){
+            return response()->json(['Error'=>'El comentario no pertenece al post'], 200);
         }
-        Comment::create(['content' => $request->content, 'post_id' => $id]);
-        return 'El comentario "'.$request->content.'" fue creado exitosamente';        
+        return response()->json(['Post'=>$post,'Comment'=>$comment], 200);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -76,22 +32,19 @@ class CommentController extends Controller
     {
         Post::findOrFail($p_id);
         if(is_null($request->input('content'))){
-            return 'No se insertaron datos';
+            return response()->json(['error' => 'No se insertaron datos para actualizar el comentario'], 406);
         }
         $comment = Comment::findOrFail($c_id);        
         $comment->content = $request->input('content');
         $comment->save();
+        return response()->json(['succes' => 'El comentario fue actualizado de manera exitosa'], 200);
         return 'Comentario actualizado de manera exitosa';
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Comment $comment)
-    {
-        //
+    public function delete($id){
+        $comment = Comment::findOrFail($id);
+        $nom = $comment->content;
+        $comment->delete();
+        return 'El comentario "'.$nom.'" fue eliminado satisfactoriamente';    
     }
 }

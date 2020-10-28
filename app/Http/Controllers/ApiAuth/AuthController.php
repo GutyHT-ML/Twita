@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\ApiAuth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\User;
+use App\Grant;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\ValidationException;
 
 class AuthController extends Controller
 {
@@ -26,12 +27,15 @@ class AuthController extends Controller
         $user = User::where('email',$request->email)->first();
 
         if(! $user || ! Hash::check($request->password, $user->password)){
-            throw ValidationException::withMessages([
-                'email'=>['Credenciales incorrectas...']
-            ]);
+            return response()->json(['error' => 'Credenciales incorrectas'], 401);
+        }
+        $abilities = array();
+        $grants = Grant::where('user_id', $user->id)->get();
+        foreach ($grants as $grant) {
+            array_push($abilities, $grant->abilities);
         }
 
-        $token = $user->createToken($request->email, ['user:info'])->plainTextToken;
+        $token = $user->createToken($request->email, $abilities)->plainTextToken;
         return response()->json(['token'=>$token], 201);
     }
 

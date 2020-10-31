@@ -61,4 +61,55 @@ class UserController extends Controller
         return abort(400, 'Error al generar el registro');
     }
 
+    public function grant(Request $request, $id, $ab){
+        $abilitie = '';
+        switch ($ab) {
+            case 'e':
+                $abilitie = 'user:edit';
+                break;
+            case 's':
+                $abilitie = 'user:info';
+                break;
+            case 'd':
+                $abilitie = 'user:delete';
+                break;
+            case 'p':
+                $abilitie = 'user:perfil';
+                break;
+            default:
+                return response()->json(['Error'=>'Permiso no encontrado'], 406);
+                break;
+        }
+        $grant = Grant::create([
+            'user_id'=>$id,
+            'abilities'=>$abilitie
+        ]);
+        return response()->json(['Grant establecido' => $grant, 'Usuario'=>$grant->user()->get()], 201);
+    }
+
+    public function revoke(Request $request, $id, $ab){
+        $user = User::findOrFail($id);
+        $grants = $user->grants();
+        $abilitie = '';
+        switch ($ab) {
+            case 'e':
+                $abilitie = 'user:edit';
+                break;
+            case 's':
+                $abilitie = 'user:info';
+                break;
+            case 'd':
+                $abilitie = 'user:delete';
+                break;
+            case 'p':
+                $abilitie = 'user:perfil';
+                break;
+            default:
+                return response()->json(['Error'=>'Permiso no encontrado'], 406);
+                break;
+        }
+        $grants->where('abilities', $abilitie)->delete();
+        return response()->json(['User'=>$user, 'Revoke'=>$abilitie], 201);
+    }
+
 }

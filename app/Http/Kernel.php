@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'postcomment' => \App\Http\Middleware\CanPost::class,
         'edit' => \App\Http\Middleware\CanEdit::class,
         'delete' => \App\Http\Middleware\CanDelete::class,
+        'admin' => \App\Http\Middleware\IsAdmin::class,
     ];
 }

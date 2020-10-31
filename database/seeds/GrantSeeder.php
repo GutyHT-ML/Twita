@@ -18,6 +18,10 @@ class GrantSeeder extends Seeder
         ]);
         Grant::create([
             'user_id'=>1,
+            'abilities'=>'admin:admin'
+        ]);
+        Grant::create([
+            'user_id'=>1,
             'abilities'=>'user:info'
         ]);
         Grant::create([

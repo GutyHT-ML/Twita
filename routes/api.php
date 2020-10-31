@@ -19,6 +19,9 @@ Route::middleware('auth:sanctum')->delete('/logout', 'UserController@logOut');
 Route::post('/signin','UserController@signIn')->middleware('email', 'grant');
 Route::post('/login','UserController@logIn');
 
+Route::post('/user/{id}/grant/{ab}', 'UserController@grant')->where(['id' => '[0-9]+', 'ab' => '[a-z]+'])->middleware('auth:sanctum', 'admin');
+Route::delete('/user/{id}/revoke/{ab}', 'UserController@revoke')->where(['id' => '[0-9]+', 'ab' => '[a-z]+'])->middleware('auth:sanctum', 'admin');
+
 Route::get('/post', 'PostController@showPosts');
 Route::get('/post/{id}', 'PostController@showPost')->where('id', '[0-9]+');
 Route::get('/post/{id}/comments', 'PostController@showComments')->where('id', '[0-9]+');

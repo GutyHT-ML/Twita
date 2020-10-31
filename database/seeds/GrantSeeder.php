@@ -32,5 +32,9 @@ class GrantSeeder extends Seeder
             'user_id'=>2,
             'abilities'=>'user:info'
         ]);
+        Grant::create([
+            'user_id'=>2,
+            'abilities'=>'user:perfil'
+        ]);
     }
 }

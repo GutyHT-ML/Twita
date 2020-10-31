@@ -1,15 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\ApiAuth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
-use App\User;
-use App\Grant;
-use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class UserController extends Controller
 {
     public function index(Request $request){
         if($request->user()->tokenCan('user:perfil')){
@@ -60,4 +55,9 @@ class AuthController extends Controller
         return abort(400, 'Error al generar el registro');
     }
 
+//Relationships
+    public function grants()
+    {
+        return $this->hasMany('App\Grant');
+    }
 }

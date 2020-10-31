@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('auth:sanctum')->get('/user', 'ApiAuth\AuthController@index');
-Route::middleware('auth:sanctum')->delete('/logout', 'ApiAuth\AuthController@logOut');
+Route::middleware('auth:sanctum')->get('/user', 'UserController@index');
+Route::middleware('auth:sanctum')->delete('/logout', 'UserController@logOut');
 
-Route::post('/signin','ApiAuth\AuthController@signIn');
-Route::post('/login','ApiAuth\AuthController@logIn');
+Route::post('/signin','UserController@signIn')->middleware('email', 'grant');
+Route::post('/login','UserController@logIn');
 
 Route::get('post', 'PostController@showPosts');
 Route::get('post/{id}', 'PostController@showPost')->where('id', '[0-9]+');

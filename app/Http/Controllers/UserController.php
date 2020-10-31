@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
+use App\User;
+use App\Grant;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -24,6 +29,7 @@ class UserController extends Controller
         if(! $user || ! Hash::check($request->password, $user->password)){
             return response()->json(['error' => 'Credenciales incorrectas'], 401);
         }
+
         $abilities = array();
         $grants = Grant::where('user_id', $user->id)->get();
         foreach ($grants as $grant) {
@@ -55,9 +61,4 @@ class UserController extends Controller
         return abort(400, 'Error al generar el registro');
     }
 
-//Relationships
-    public function grants()
-    {
-        return $this->hasMany('App\Grant');
-    }
 }

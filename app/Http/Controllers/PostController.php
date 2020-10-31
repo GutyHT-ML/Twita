@@ -28,7 +28,8 @@ class PostController extends Controller
         //reglas de validación
         $reglas = [
             'title' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'user_id' =>'required'
         ];
         //validador
         $validador = \Validator::make($request->all(), $reglas);

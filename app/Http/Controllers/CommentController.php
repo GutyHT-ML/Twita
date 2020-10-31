@@ -21,6 +21,25 @@ class CommentController extends Controller
         return response()->json(['Post'=>$post,'Comment'=>$comment], 200);
     }
     
+    public function createComment(Request $request, $id)
+    {
+        //reglas de validación
+        $reglas = [
+            'content' => 'required',
+        ];
+        //validador
+        $validador = \Validator::make($request->all(), $reglas);
+        if($validador->fails()){
+            return response()->json(['Unacceptable' => 'Llena los campos del post'], 406);
+        }
+        $comment = Comment::create([
+            'content' => $request->content,
+            'post_id' => $id,
+            'user_id' => $request->user()->id
+        ]);
+        return response()->json(['Post' => $comment->post()->get(),'Comment' => $comment], 201);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -30,15 +49,14 @@ class CommentController extends Controller
      */
     public function update(Request $request, $p_id, $c_id)
     {
-        Post::findOrFail($p_id);
+        $post = Post::findOrFail($p_id);
         if(is_null($request->input('content'))){
             return response()->json(['error' => 'No se insertaron datos para actualizar el comentario'], 406);
         }
         $comment = Comment::findOrFail($c_id);        
         $comment->content = $request->input('content');
         $comment->save();
-        return response()->json(['succes' => 'El comentario fue actualizado de manera exitosa'], 200);
-        return 'Comentario actualizado de manera exitosa';
+        return response()->json(['Post' => $post, 'Comment' => $comment], 200);
     }
 
     public function delete($id){

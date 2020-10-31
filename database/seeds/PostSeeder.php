@@ -14,10 +14,12 @@ class PostSeeder extends Seeder
     {
         Post::create([
             'title'=>'My first post',
+            'user_id' =>1,
             'body'=>'Hola soy nueva en el grupo'
         ]);
         Post::create([
             'title'=>'Equisde',
+            'user_id' => 2,
             'body'=>'Medan dinero¿'
         ]);
     }

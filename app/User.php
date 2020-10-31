@@ -38,8 +38,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+//Relationships
     public function grants()
     {
         return $this->hasMany('App\Grant');
+    }
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+    public function posts()
+    {
+        return $this->hasMany('App\Posts');
     }
 }

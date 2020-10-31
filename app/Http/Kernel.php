@@ -64,5 +64,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'grant' => \App\Http\Middleware\AssignGrants::class,
         'email' => \App\Http\Middleware\AvailableEmail::class,
+        'postcomment' => \App\Http\Middleware\CanPost::class,
+        'edit' => \App\Http\Middleware\CanEdit::class,
+        'delete' => \App\Http\Middleware\CanDelete::class,
     ];
 }

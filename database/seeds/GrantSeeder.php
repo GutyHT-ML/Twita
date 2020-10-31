@@ -29,12 +29,24 @@ class GrantSeeder extends Seeder
             'abilities'=>'user:delete'
         ]);
         Grant::create([
+            'user_id'=>1,
+            'abilities'=>'user:post'
+        ]);
+        Grant::create([
             'user_id'=>2,
             'abilities'=>'user:info'
         ]);
         Grant::create([
             'user_id'=>2,
             'abilities'=>'user:perfil'
+        ]);
+        Grant::create([
+            'user_id'=>2,
+            'abilities'=>'user:post'
+        ]);
+        Grant::create([
+            'user_id'=>3,
+            'abilities'=>'user:info'
         ]);
     }
 }

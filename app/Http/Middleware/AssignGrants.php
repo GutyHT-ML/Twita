@@ -28,6 +28,10 @@ class AssignGrants
             'user_id'=>$user->id,
             'abilities'=>'user:info'
         ]);
+        Grant::create([
+            'user_id'=>$user->id,
+            'abilities'=>'user:post'
+        ]);
         return $response;
     }
 }
